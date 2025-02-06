@@ -8,10 +8,12 @@ import { prismaClient } from '@repo/db/client';
 
 
 export const signup = async (req: Request, res: Response) => {
-  const data = req.body.data;
+
+  const data = req.body;
   const validData = registerValidation.safeParse(data);
+
   if (!validData.success) {
-    res.status(400).json({
+    res.status(402).json({
       success: false,
       message: "Invalid data",
     });
@@ -58,9 +60,10 @@ export const signup = async (req: Request, res: Response) => {
     })
     return;
   } catch (error) {
+    const errMessage = (error as Error).message // type assertion
     res.status(500).json({
         success:false,
-        message:"Something went wrong"
+        message:`"Something went wrong" ${errMessage}`
     })
   }
 };
@@ -121,7 +124,8 @@ export const signin = async(req:Request, res:Response)=>{
                 firstName:user.firstName,
                 lastName:user.lastName,
                 image:user.image
-            }
+            },
+            token:token
         })
         return; 
 

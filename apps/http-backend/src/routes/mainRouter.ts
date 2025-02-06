@@ -1,7 +1,10 @@
-// import express from "express"
+import express, { Router } from "express"
+import { userRouter } from "./userRouter"
 
-// export const mainRouter = express.Router()
+const mainRouter:Router = Router()
 
-// mainRouter.use('/user')
 
+mainRouter.use('/user', userRouter)
+
+export {mainRouter}
 

@@ -1,17 +1,20 @@
 import "./dotenv";
 
 import express from "express"
-import { JWT_SECRET } from '@repo/backend-common/config';
+import { mainRouter } from "./routes/mainRouter";
+
+
 
 
 const app = express()
 
 app.use(express.json())
+console.log("This")
 
-app.use('/api/v1')
+app.use('/api/v1', mainRouter)
 
-JWT_SECRET
+
 
 app.listen(3001,()=>{
-    console.log("http-server is running on port 3000")
+    console.log("http-server is running on port 3001")
 })
