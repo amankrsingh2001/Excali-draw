@@ -15,10 +15,11 @@ export const auth = async (req:Request, res:Response, next:NextFunction)=>{
         const token = req.headers.authorization
 
         if (!token || !token.startsWith('Bearer ')) {
-            return res.status(401).json({
+             res.status(401).json({
                 success: false,
                 message: "Failed to get token"
             });
+            return;
         }
 
         const word = token?.split(' ')
@@ -28,20 +29,19 @@ export const auth = async (req:Request, res:Response, next:NextFunction)=>{
                 success:false,
                 message:"Failed to get token"
             })
-            return
+            return;
         }
         const authToken = word[1]
         const decodedToken = jwt.verify(authToken, JWT_SECRET) as JwtPayload
-        
 
-        if(!decodedToken    || !decodedToken.userId ){
+        if(!decodedToken    || !decodedToken.id ){
             res.status(401).json({
                 success:false,
                 message:"Unauthorized"
             })
-            return
+            return;
         }
-        (req as AuthRequest).userId = decodedToken.userId
+        (req as AuthRequest).userId = decodedToken.id
 
         next()
 

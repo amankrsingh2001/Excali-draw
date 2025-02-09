@@ -9,7 +9,7 @@ import { mainRouter } from "./routes/mainRouter";
 const app = express()
 
 app.use(express.json())
-console.log("This")
+
 
 app.use('/api/v1', mainRouter)
 

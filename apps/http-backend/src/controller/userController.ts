@@ -13,7 +13,7 @@ export const signup = async (req: Request, res: Response) => {
   const validData = registerValidation.safeParse(data);
 
   if (!validData.success) {
-    res.status(402).json({
+    res.status(400).json({
       success: false,
       message: "Invalid data",
     });
@@ -70,12 +70,12 @@ export const signup = async (req: Request, res: Response) => {
 
 
 export const signin = async(req:Request, res:Response)=>{
-    const data  = req.body.data;
+    const data  = req.body;
     const validData = loginValidation.safeParse(data)
     if(!validData.success){
         res.status(400).json({
             success: false,
-            message: "Valid data",
+            message: "InValid data",
           });
           return;
     }
