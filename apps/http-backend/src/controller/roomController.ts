@@ -57,3 +57,32 @@ export const createRoom = async(req:Request, res:Response)=>{
         return;
     }
 }
+
+export const getRoom = async(req:Request, res:Response)=>{
+    try {
+        const roomId = Number(req.params.roomId)
+        const messages = await prismaClient.chat.findMany({
+            where:{
+                roomId:roomId,
+            },
+            orderBy:{
+                id:"desc"
+            },
+            take:50
+        })
+
+        res.status(200).json({
+            success:true,
+            data:messages
+        })
+        return;
+    } catch (error) {
+
+        const err = (error as Error).message
+        res.status(500).json({
+            success:false,
+            message:"Something went wrong",
+            error:err
+        })
+    }
+}
