@@ -59,8 +59,10 @@ export const createRoom = async(req:Request, res:Response)=>{
 }
 
 export const getRoom = async(req:Request, res:Response)=>{
+    console.log()
     try {
         const roomId = Number(req.params.roomId)
+
         const messages = await prismaClient.chat.findMany({
             where:{
                 roomId:roomId,
@@ -84,5 +86,31 @@ export const getRoom = async(req:Request, res:Response)=>{
             message:"Something went wrong",
             error:err
         })
+    }
+}
+
+export const getRoomSlug = async(req:Request, res:Response)=>{
+    try {
+        const slug = req.params.sulg;
+
+        const room = await prismaClient.room.findFirst({
+            where:{
+                slug:slug
+            }
+        })
+         res.status(200).json({
+            success:true,
+            data:room
+        })
+        return
+    } catch (error) {
+
+        const err = (error as Error).message
+            res.status(500).json({
+                success:false,
+                message:"Something went wrong",
+                error:err
+            })  
+            return;
     }
 }
