@@ -1,19 +1,24 @@
 "use client";
 
 import { ReactNode } from "react";
+import { cn } from "clsx-for-tailwind";
 
 interface ButtonProps {
   children: ReactNode;
   className?: string;
-  appName: string;
+  appName?: string;
+  variant?: "primary";
 }
 
-export const Button = ({ children, className, appName }: ButtonProps) => {
+export const Button = ({ children, variant = "primary", className, appName }: ButtonProps) => {
+  const buttonStyle = cn(
+    "btn",
+    variant === "primary" && "bg-red-200 text-white h-[20px] w-[20px]",
+    className
+  );
+
   return (
-    <button
-      className={className}
-      onClick={() => alert(`Hello from your ${appName} app!`)}
-    >
+    <button className={buttonStyle} onClick={() => alert(`Hello from your ${appName} app!`)}>
       {children}
     </button>
   );
