@@ -1,0 +1,45 @@
+"use client"
+
+import axios from "axios"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "../store/store"; // Import RootState
+import { setRooms } from "../slice/roomSlice"
+import Room from "../components/Room";
+
+async function getRoomList(token:string){
+    
+    const roomList = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_BACKEND}/room/getRoomList`, {headers:{
+        Authorization:token
+    }})
+
+    return roomList.data.rooms
+}
+
+export default function CanvasList (){
+
+
+    const dispatch = useDispatch()
+    const {token} = useSelector((state:RootState)=>state.auth)
+
+
+    useEffect(()=>{
+        async function getData(){
+            if(!token){
+                return;
+            }
+            const data = await getRoomList(token)
+            if(!data){
+                return;
+            }
+
+            dispatch(setRooms(data))
+        }
+        getData()
+    },[token])
+
+
+
+return <Room/>
+
+}

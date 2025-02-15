@@ -9,7 +9,7 @@ async function getRoomId(slug: string) {
     try {
       const response = await axios.get(`${http_backend}/room/slug/class_1`, {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjYjE5YWVjLTRiZDQtNDJmNi05M2Y5LTIwM2RiODA1MDVhZSIsImlhdCI6MTczOTI4NDM5MCwiZXhwIjoxNzM5MzAyMzkwfQ.9kxa4GKNRzNPns25gF_H9fxWHKeeRM1O7DL9Ftit-Gg`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI5NWMzZGFiLWFhNzktNDI5Zi04Nzc0LTBiM2QwN2Q5OGU3MiIsImlhdCI6MTczOTU2MDQ3MSwiZXhwIjoxNzM5NTc4NDcxfQ.cYk7AG_C6DOcCQuSCYNlDgruLwztXQXp1JfrfXtfmkA`,
         },
       });
       return response.data;

@@ -10,10 +10,10 @@ export default function Home() {
     <div className="w-screen h-screen">
       {/* navbar */}
       <div className="absolute inset-x-0 top-[20px] z-10 h-96 overflow-hidden text-gray-900/40 opacity-20 [mask-image:linear-gradient(to_top,transparent,white)]">
-      <svg
-  className="absolute inset-0 top-0 h-full w-full text-gray-900"
-  xmlns="http://www.w3.org/2000/svg"
->
+          <svg
+      className="absolute inset-0 top-0 h-full w-full text-gray-900"
+      xmlns="http://www.w3.org/2000/svg"
+    >
   <defs>
     <pattern
       id="dotted-pattern"

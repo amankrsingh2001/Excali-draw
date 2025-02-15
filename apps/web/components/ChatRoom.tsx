@@ -7,7 +7,7 @@ async function getChats(id:string){
     try {
         const chats = await axios.get(`http://localhost:3001/api/v1/room/getChat/6`,{
             headers:{
-                Authorization:`Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVjYjE5YWVjLTRiZDQtNDJmNi05M2Y5LTIwM2RiODA1MDVhZSIsImlhdCI6MTczOTI4NDM5MCwiZXhwIjoxNzM5MzAyMzkwfQ.9kxa4GKNRzNPns25gF_H9fxWHKeeRM1O7DL9Ftit-Gg`
+                Authorization:`Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI5NWMzZGFiLWFhNzktNDI5Zi04Nzc0LTBiM2QwN2Q5OGU3MiIsImlhdCI6MTczOTU2MDQ3MSwiZXhwIjoxNzM5NTc4NDcxfQ.cYk7AG_C6DOcCQuSCYNlDgruLwztXQXp1JfrfXtfmkA`
             }
         })
         return chats.data

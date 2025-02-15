@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { StoreProvider } from '../../excalidraw-frontend/app/store/StoreProvider';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

@@ -10,10 +10,11 @@ import { prismaClient } from '@repo/db/client';
 export const signup = async (req: Request, res: Response) => {
 
   const data = req.body;
+  console.log(data)
   const validData = registerValidation.safeParse(data);
 
   if (!validData.success) {
-    res.status(400).json({
+    res.status(411).json({
       success: false,
       message: "Invalid data",
     });
@@ -22,7 +23,7 @@ export const signup = async (req: Request, res: Response) => {
 
   try {
 
-  const user =   await prismaClient.user.findFirst({
+  const user =  await prismaClient.user.findFirst({
         where:{
             email:data.email
         }
