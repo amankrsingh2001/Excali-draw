@@ -43,7 +43,7 @@ export const createRoom = async(req:Request, res:Response)=>{
         res.status(200).json({
             success:true,
             message:"Room created succesfully",
-            id:createRoom.id      
+            room:createRoom     
         })
         return;
         
@@ -130,6 +130,7 @@ export const getRoomList = async(req:Request, res:Response)=>{
                 id:true,
                 slug:true,
                 createdAt:true,
+                adminId:false
             }
         })
         res.status(200).json({

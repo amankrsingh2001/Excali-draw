@@ -1,10 +1,12 @@
+"use client"
+
 import { createSlice } from "@reduxjs/toolkit";
 
 
 
-const initialState={
-    rooms:[]
-}
+const initialState = {
+    rooms: localStorage.getItem('roomList') ? JSON.parse(localStorage.getItem('roomList') as string) : [] 
+};
 
 export const roomListSlice = createSlice({
     name:"rooms",

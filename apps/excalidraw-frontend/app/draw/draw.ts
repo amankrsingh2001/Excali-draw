@@ -1,5 +1,9 @@
+"use client"
+import axios from 'axios';
+import Canvas from '../canvas/[slug]/page';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
-import Canvas from '../canvas/[roomid]/page';
 type Shape = {
     type:"rect",
     startX:number,
@@ -15,14 +19,31 @@ type Shape = {
         endArc:number
 }
 
-export function Draw(canvas:HTMLCanvasElement){
+export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string, token:string){
+
+    if (!canvas || !socket) return;
+
     let ctx = canvas.getContext('2d')
 
-    let existingShapes:Shape[] = []
-
+    
+ 
+   
     if(!ctx){
         return; 
     }
+
+    let existingShapes:Shape[] = await getExistingShapes(id, token)
+    clearCanvas(existingShapes, canvas, ctx)
+
+    socket.onmessage=(event=>{
+            const shapes = JSON.parse(event.data)
+            const message = JSON.parse(shapes.message)
+            existingShapes.push(message)
+            clearCanvas(existingShapes, canvas, ctx)
+
+    }
+)
+
             let mouseMove = false;
             let startX = 0;
             let startY = 0;
@@ -32,17 +53,24 @@ export function Draw(canvas:HTMLCanvasElement){
                 startX = e.clientX;
                 startY = e.clientY ;
             })
+
             canvas.addEventListener('mouseup',(e)=>{
                 mouseMove = false;
                 const width = e.clientX - startX
                 const height = e.clientY - startY
-                existingShapes.push({
+                const newShape:Shape = {
                     type:"rect",
                     startX : startX,
                     startY:startY,
                     width:width,
                     height:height
-                })
+                }
+                existingShapes.push(newShape)
+                socket.send(JSON.stringify({
+                    type:"chat",
+                    message:JSON.stringify(newShape),
+                    roomId:id
+                }))
                 
             })
             canvas.addEventListener('mousemove',(e)=>{
@@ -64,4 +92,16 @@ function clearCanvas (existingShapes:Shape[], canvas:HTMLCanvasElement, ctx:Canv
             ctx?.strokeRect(shape.startX, shape.startY, shape.width, shape.height)
         }
     })
+}
+
+async function getExistingShapes(id:string, token:string){
+    const message = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_BACKEND}/room/getChat/${id}`, {headers:{
+        Authorization:token
+    }})
+    const messages = message.data.data
+    const shapes = messages.map((x:any)=>{
+        const messagedata =JSON.parse(x.message)
+        return messagedata
+    })
+    return shapes
 }

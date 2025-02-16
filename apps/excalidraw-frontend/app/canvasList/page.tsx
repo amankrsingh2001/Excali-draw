@@ -32,7 +32,7 @@ export default function CanvasList (){
             if(!data){
                 return;
             }
-
+            localStorage.setItem('roomList', JSON.stringify(data))
             dispatch(setRooms(data))
         }
         getData()

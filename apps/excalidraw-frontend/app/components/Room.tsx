@@ -14,12 +14,12 @@ interface RoomDetails {
 }
 
 export default function Room() {
-  const [createRoom, setCreateRoom] = useState<boolean>(true);
+  const [createRoom, setCreateRoom] = useState<boolean>(false);
 
   const { rooms } = useSelector((state: RootState) => state.roomList);
 
   return (
-    <div>
+    <div className="">
       <div className="h-[9vh] w-full flex justify-between border-b-2 sticky top-0 z-50 opacity-90 bg-white px-24">
         <div className="flex  gap-2 justify-center my-auto ">
           <svg width="30" height="30" viewBox="0 0 24 24" className="my-auto">
@@ -43,7 +43,11 @@ export default function Room() {
           </button>
         </div>
       </div>
+        <div className=" flex flex-col w-[90%] mt-8 mx-auto gap-5">
+        <h2 className="text-2xl font-bold text-gray-900">Active Canvases</h2>
+       
 
+    <div className="flex gap-8 flex-wrap">
       {rooms &&
         rooms.map((room: RoomDetails) => {
           return (
@@ -55,12 +59,13 @@ export default function Room() {
             </div>
           );
         })}
-
+    </div>
         {
-            createRoom && <div onClick={()=>setCreateRoom(false)} className="fixed inset-0 border-2 border-black !mt-0 grid place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm" >
+            createRoom && <div onClick={()=>setCreateRoom(false)} className="fixed inset-0 border-2 border-black !mt-0 grid place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm  ">
             <CreateCanvas createRoom ={createRoom} setCreateRoom={setCreateRoom}/>
         </div>
         }
+    </div>
     </div>
   );
 }
