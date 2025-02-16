@@ -19,7 +19,7 @@ export default function Room() {
   const { rooms } = useSelector((state: RootState) => state.roomList);
 
   return (
-    <div className="">
+    <div className="h-screen w-screen">
       <div className="h-[9vh] w-full flex justify-between border-b-2 sticky top-0 z-50 opacity-90 bg-white px-24">
         <div className="flex  gap-2 justify-center my-auto ">
           <svg width="30" height="30" viewBox="0 0 24 24" className="my-auto">
