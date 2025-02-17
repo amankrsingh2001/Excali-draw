@@ -6,6 +6,7 @@ import { Circle, Square } from "lucide-react";
 import { useSocket } from "@/hook/useSocket";
 import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
 
 interface Rooms {
   id: string;
@@ -15,6 +16,8 @@ export default function Canvas({ id }: Rooms) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { socket, loading } = useSocket();
   const {token} = useSelector((state:RootState)=>state.auth)
+  const pathname = usePathname(); 
+
     
   useEffect(() => {
     if (socket && !loading) {
@@ -43,6 +46,16 @@ export default function Canvas({ id }: Rooms) {
     return <div>Loading...</div>;
   }
 
+  const inviteRoomHandler = async()=>{
+   try {
+    const copyText = await navigator.clipboard.writeText(`http://localhost:3002${pathname}`)
+    console.log("text copied")
+   } catch (error) {  
+      const err = (error as Error).message
+      console.log(err)
+   }
+  }
+
   return (
     <div className="w-full h-full overflow-hidden relative">
       <canvas ref={canvasRef} className="border-2 border-black"></canvas>
@@ -54,6 +67,7 @@ export default function Canvas({ id }: Rooms) {
           <Circle height={24} width={24} color="#393a3b" />
         </button>
       </div>
+      <button onClick={inviteRoomHandler} className="bg-gradient-to-r from-black to-orange-500 absolute h-[6vh] right-[10%] border-[1px] top-4 w-fit px-4 py-2 text-white shadow-2xl rounded-lg">Invite User</button>
     </div>
   );
 }

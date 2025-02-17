@@ -6,6 +6,10 @@ import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { prismaClient } from '@repo/db/client';
 
+interface AuthRequest extends Request{
+    userId:string
+}
+
 
 export const signup = async (req: Request, res: Response) => {
 
@@ -136,5 +140,22 @@ export const signin = async(req:Request, res:Response)=>{
             message:"Something went wrong"
         })
         return;
+    }
+}
+
+export const validUser = async(req:Request, res:Response)=>{
+    try {
+            const token = (req as AuthRequest).userId
+            if(token)
+                res.status(200).json({
+            success:true,
+        message:"Auhorized"})
+        return;
+
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:"Something went wrong"
+        })
     }
 }

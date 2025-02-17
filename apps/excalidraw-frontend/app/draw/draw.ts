@@ -1,8 +1,5 @@
 "use client"
 import axios from 'axios';
-import Canvas from '../canvas/[slug]/page';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store/store';
 
 type Shape = {
     type:"rect",
@@ -25,8 +22,6 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
 
     let ctx = canvas.getContext('2d')
 
-    
- 
    
     if(!ctx){
         return; 

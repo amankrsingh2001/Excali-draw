@@ -1,12 +1,37 @@
+"use client"
+
 import Link from "next/link";
 import DisplayCard from "./components/DisplayCard";
 import { Brush } from "lucide-react";
 import { CardDetails } from "@/utils/CardDetails";
+import { RootState } from "./store/store";
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from "next/navigation";
+import { setToken } from "./slice/userSlice";
+import { setRooms } from "./slice/roomSlice";
+import toast, { Toaster } from 'react-hot-toast';
+
+
+
 
 export default function Home() {
+
+  const {token} = useSelector((state:RootState)=>state.auth)
+  const dispatch = useDispatch()
+  const router = useRouter()
+
+  const logOutHandler = ()=>{
+    localStorage.removeItem('token')
+    localStorage.removeItem('roomList')
+    dispatch(setToken(null))
+    dispatch(setRooms([]))
+    
+    router.push('/signin')
+  }
+
   return (
     <div className="w-screen h-screen">
-      {/* navbar */}
+
       <div className="absolute inset-x-0 top-[20px] z-10 h-96 overflow-hidden text-gray-900/40 opacity-20 [mask-image:linear-gradient(to_top,transparent,white)]">
         <svg
           className="absolute inset-0 top-0 h-full w-full text-gray-900"
@@ -61,11 +86,20 @@ export default function Home() {
             Pricing
           </Link>
 
-          <Link href={"/signup"}>
+          {!token? <Link href={"/signup"}>
+          
             <button className="text-sm lg:text-md bg-gradient-to-r from-black to-orange-500 px-2 py-2 lg:px-5 lg:py-2  text-white rounded-md hover:opacity-90 font-serif">
               Get Started
             </button>
-          </Link>
+          </Link>: <>
+          <button onClick={logOutHandler} className="text-sm lg:text-md bg-gradient-to-r from-black to-orange-500 px-2 py-2 lg:px-5 lg:py-2  text-white rounded-md hover:opacity-90 font-serif">
+            Logout
+          </button>
+
+          </>         
+          
+
+        }
         </div>
       </div>
 
@@ -88,9 +122,10 @@ export default function Home() {
 
       {/* cardSection */}
       <div className=" lg:h-[36vh] flex flex-col md:flex-row justify-center items-center gap-12">
-        {CardDetails.map((card) => {
+        {CardDetails.map((card, index) => {
           return (
             <DisplayCard
+            key ={index}
               heading={card.heading}
               description={card.description}
               icon={card.icon}

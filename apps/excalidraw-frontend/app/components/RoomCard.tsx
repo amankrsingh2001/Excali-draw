@@ -21,21 +21,21 @@ export default function RoomCard({room}:RoomCardProps){
     }
    
         return <div className=" h-full w-full cursor-pointer  flex flex-col gap-4 rounded-md">
-                <div className="w-full h-[65%] bg-orange-800 text-[#C5A495] relative rounded-md">
-                    <Brush className="w-10 h-10 font-bold absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "/>
+                <div className="w-full h-[65%] bg-orange-800 text-[#C5A495] relative rounded-md " onClick={canvasClickHandler} >
+                    <Brush className="lg:w-10 lg:h-10 lg:font-bold absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "/>
                 </div>
-                <div className="flex justify-between  items-center">
-                    <h3 className="text-xl font-bold tracking-wide capitalize ">{room.slug}</h3>
-                    <button onClick={canvasClickHandler} className="rounded-md bg-gradient-to-r from-black to-orange-500 text-white font-semibold px-3 py-2">Join Canvas</button>
+                <div className="flex justify-between flex-col lg:flex-row items-center ">
+                    <h3 className="text-md w-full lg:text-xl text-center italic ml-1 2xl:text-start font-bold tracking-wide capitalize ">{room.slug}</h3>
+                    
                 </div>
-                <div className="flex justify-between mt-2">
+                <div className="flex  flex-col 2xl:flex-row  lg:justify-between justify-center items-center mt-2">
                     <div className="flex items-center space-x-2">
-                        <UserRound className="w-4 h-4"/>
-                        <p className="">4 Participants</p>
+                        <UserRound className="w-4 h-4 "/>
+                        <p className="text-sm lg:text-md">4 Participants</p>
                     </div>
                     <div className="flex items-center space-x-2">
-                    <Clock className="w-2 h-2 lg:w-4 lg:h-4" />
-                    <span className="tracking-tight">2 mins ago</span>
+                    <Clock className="w-4 h-4" />
+                    <span className="tracking-tight lg:text-md text-sm whitespace-nowrap">2 mins ago</span>
                   </div>
                 </div>
                 
