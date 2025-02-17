@@ -73,10 +73,10 @@ export default function Home() {
 
         <div className="flex items-center gap-6">
           <Link
-            href="/"
+            href="/canvasList"
             className="text-gray-900 hidden md:block hover:text-gray-900 font-[500]"
           >
-            Features
+            Dashboard
           </Link>
 
           <Link
@@ -105,7 +105,7 @@ export default function Home() {
 
       {/* Hero section */}
 
-      <div className="h-[30vh] md:h-[45vh]  lg:h-[40vh] mt-12 flex flex-col items-center ">
+      <div className="h-[40vh] md:h-[45vh]  lg:h-[40vh] mt-12 flex flex-col items-center ">
         <h1 className="text-2xl md:text-5xl w-[80%] text-center font-bold mb-6 mt-4 bg-gradient-to-r from-[#28282B] to-orange-500 text-transparent bg-clip-text">
           Collaborate and Create in Real-Time{" "}
         </h1>
@@ -114,10 +114,12 @@ export default function Home() {
           collaborative drawing tool. Sketch, design, and innovate together, no
           matter where you are.
         </p>
-
-        <button className="bg-gradient-to-r font-bold text-sm md:text-lg mt-12 from-black to-orange-500 px-4 py-2 md:px-8 md:py-3 text-white rounded-md hover:shadow-xl">
+        <Link href='/canvasList'>
+        <button  className="bg-gradient-to-r relative z-[100] font-bold text-sm md:text-lg mt-12 from-black to-orange-500 px-4 py-2 md:px-8 md:py-3 text-white rounded-md hover:shadow-xl">
           Start Drawing Now
         </button>
+
+        </Link>
       </div>
 
       {/* cardSection */}

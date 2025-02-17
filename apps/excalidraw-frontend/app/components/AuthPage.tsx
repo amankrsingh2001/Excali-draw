@@ -14,6 +14,7 @@ import { loginValidation, registerValidation } from '../../../../packages/common
 import { useDispatch } from "react-redux";
 import { setToken } from "../slice/userSlice";
 import { toast, Toaster } from 'react-hot-toast';
+import { useState } from "react";
 
 interface Auth {
   isSignin: boolean;
@@ -30,6 +31,7 @@ export default function AuthPage({ isSignin }: Auth) {
 
   const router = useRouter();
   const { register, handleSubmit } = useForm<IFormInput>()
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
  
@@ -37,7 +39,8 @@ export default function AuthPage({ isSignin }: Auth) {
 
   const onSubmitHandler = async(data:IFormInput)=>{
     let id = toast.loading('loading')
-   
+    setLoading(true)
+    
     if(isSignin){
       try {
         const parsedData = loginValidation.safeParse(data)
@@ -50,15 +53,28 @@ export default function AuthPage({ isSignin }: Auth) {
         
         localStorage.setItem('token', `Bearer ${token}`)
         dispatch(setToken(`Bearer ${token}`))
-        router.push('/canvasList')
+        setLoading(false)
         toast.success('Logged In',{
           id:id
         })
+        router.push('/canvasList')
+       
       } catch (error) {
-          const err = (error as Error).message
-          console.log(err)
+        
+        if(axios.isAxiosError(error)){
+          toast.error(error.response?.data?.message || "Invalid credentials",{
+            id:id
+          })
+        }else{
+          toast.error( "Something went wrong",{
+            id:id
+          })
+        }
+        setLoading(false)
       }
-    }else{
+
+    }
+    else{
       try {
         const parsedData = registerValidation.safeParse(data)
         if(!parsedData.success){
@@ -69,10 +85,13 @@ export default function AuthPage({ isSignin }: Auth) {
         if(createUser.data.success){
           router.push('/signin')
         }
+        setLoading(false)
         toast.success("Account created",{
           id:id
         })
       } catch (error) {
+
+       
         if(axios.isAxiosError(error)){
           toast.error(error.response?.data?.message || "Something went wrong",{
             id:id
@@ -82,7 +101,7 @@ export default function AuthPage({ isSignin }: Auth) {
             id:id
           })
         }
-          
+        setLoading(false)
       }
     }
   }
@@ -185,6 +204,7 @@ export default function AuthPage({ isSignin }: Auth) {
         </div>
 
         <button
+        disabled={loading}
           type="submit"
           className="bg-gradient-to-l from-black to-orange-500 px-5 py-2  text-white rounded-md hover:opacity-90 font-sans mt-3"
         >

@@ -118,6 +118,7 @@ export const signin = async(req:Request, res:Response)=>{
                 success:false,
                 message:"Password isn't valid"
             })
+            return;
         }
 
         const token = jwt.sign({id:user.id},JWT_SECRET,{
