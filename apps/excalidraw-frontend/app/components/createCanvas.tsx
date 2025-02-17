@@ -1,9 +1,10 @@
 import axios from "axios";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store"; // Import RootState
 import { setRooms } from "../slice/roomSlice";
+import toast from "react-hot-toast";
 
 
 interface ModalDetails {
@@ -23,9 +24,10 @@ export default function CreateCanvas({
   const { token } = useSelector((state: RootState) => state.auth);
   const { rooms } = useSelector((state: RootState) => state.roomList);
   const disptach = useDispatch();
+  const buttonRef = useRef(false)
 
   const addCanvasHandler = async (data: IFormInput) => {
-
+    const id = toast.loading('loading')
     try {
       const addCanvas = await axios.post(
         `${process.env.NEXT_PUBLIC_HTTP_BACKEND}/room/create`,
@@ -36,6 +38,10 @@ export default function CreateCanvas({
           },
         }
       );
+      toast.success(addCanvas.data.message||"Canvas created",{
+        id:id
+      })
+
         const newCanvas = [...rooms, addCanvas.data.room]
         localStorage.setItem('roomList', JSON.stringify(newCanvas));
         const newRooms = localStorage.getItem('roomList');
@@ -45,8 +51,17 @@ export default function CreateCanvas({
 
 
     } catch (error) {
-      const err = (error as Error).message;
-      console.log(err);
+      if(axios.isAxiosError(error)){
+        toast.error("Enter new Canvas Name",{
+          id:id
+        })
+      }else{
+        const err = (error as Error).message;
+        toast.error("Something went wrong",{
+          id:id
+        })
+      }
+      
     }
   };
 

@@ -25,6 +25,7 @@ export const createRoom = async(req:Request, res:Response)=>{
 
 
     try {
+        
       const createRoom = await prismaClient.room.create({
         data:{
             slug:parsedData.data.name,
@@ -40,6 +41,7 @@ export const createRoom = async(req:Request, res:Response)=>{
             })
             return;
         }
+
         res.status(200).json({
             success:true,
             message:"Room created succesfully",
