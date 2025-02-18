@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Draw } from "../draw/draw";
 import { Circle, Square } from "lucide-react";
 import { useSocket } from "@/hook/useSocket";
 import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface Rooms {
   id: string;
@@ -17,7 +18,7 @@ export default function Canvas({ id }: Rooms) {
   const { socket, loading } = useSocket();
   const {token} = useSelector((state:RootState)=>state.auth)
   const pathname = usePathname(); 
-
+  const [shape, setShape] = useState("rect")
     
   useEffect(() => {
     if (socket && !loading) {
@@ -40,31 +41,38 @@ export default function Canvas({ id }: Rooms) {
     let canvas = canvasRef.current;
     // calling canvas
     Draw(canvas, socket, id, token as string);
-  }, [canvasRef, socket, id, loading]);
+  }, [canvasRef, socket, id, loading, shape]);
 
   if (!socket || socket == undefined) {
     return <div>Loading...</div>;
   }
 
   const inviteRoomHandler = async()=>{
+    const id = toast.loading('loading')
    try {
     const copyText = await navigator.clipboard.writeText(`http://localhost:3002${pathname}`)
+    toast.success("Link Copied", {
+      id:id
+    })
     console.log("text copied")
    } catch (error) {  
       const err = (error as Error).message
       console.log(err)
+      toast.error('Something went wrong',{
+        id:id
+      })
    }
   }
 
   return (
     <div className="w-full h-full overflow-hidden relative">
-      <canvas ref={canvasRef} className="border-2 border-black"></canvas>
-      <div className="absolute h-[6vh] left-[32%] border-[1px] top-4 w-[32vw] bg-white shadow-2xl rounded-lg">
-        <button className="hover:bg-sky-100">
-          <Square height={24} width={24} color="#393a3b" />
+      <canvas ref={canvasRef} className=""></canvas>
+      <div className="absolute h-[6vh] left-[32%] border-[1px] top-4 w-[32vw] bg-white shadow-2xl rounded-lg flex gap-1 items-center">
+        <button className="hover:bg-sky-100  h-[55%]  rounded-md ml-2 px-1">
+          <Square height={24} width={20} color="#666666" />
         </button>
-        <button className="hover:bg-blue-200-100">
-          <Circle height={24} width={24} color="#393a3b" />
+        <button onClick={()=>setShape("arc")} className="hover:bg-sky-100  h-[80%] rounded-md px-1">
+          <Circle height={24} width={20} color="#666666" />
         </button>
       </div>
       <button onClick={inviteRoomHandler} className="bg-gradient-to-r from-black to-orange-500 absolute h-[6vh] right-[10%] border-[1px] top-4 w-fit px-4 py-2 text-white shadow-2xl rounded-lg">Invite User</button>

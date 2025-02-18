@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import  axios from 'axios';
-import { loginValidation, registerValidation } from '../../../../packages/common/src/types';
+import { loginValidation, registerValidation } from "@repo/common/types";
 
 import { useDispatch } from "react-redux";
 import { setToken } from "../slice/userSlice";

@@ -5,9 +5,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    rooms: []
+    rooms: typeof window !== undefined ? JSON.parse(localStorage.getItem('roomList') as string) : [] 
 };
-// localStorage.getItem('roomList') ? JSON.parse(localStorage.getItem('roomList') as string) : [] 
+
 
 export const roomListSlice = createSlice({
     name:"rooms",

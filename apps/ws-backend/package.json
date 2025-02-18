@@ -13,11 +13,11 @@
     "@types/ws": "^8.5.14",
     "@repo/db": "workspace:*",
     "jsonwebtoken": "^9.0.2",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "@repo/backend-common": "workspace:*",
+    "@repo/common": "workspace:*"
   },
   "devDependencies": {
-    "@repo/backend-common": "workspace:*",
-    "@repo/common": "workspace:*",
     "esbuild": "^0.24.2",
     "esbuild-runner": "^2.2.2"
   },
