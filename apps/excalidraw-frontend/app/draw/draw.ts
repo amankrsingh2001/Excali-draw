@@ -8,9 +8,9 @@ type Shape = {
     width:number,
     height:number
 }   | {
-    type:"circle",
-        X:number,
-        Y:number,
+    type:"arc",
+        startX:number,
+        startY:number,
         radius:number,
         startArc:number,
         endArc:number
@@ -53,28 +53,65 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
                 mouseMove = false;
                 const width = e.clientX - startX
                 const height = e.clientY - startY
-                const newShape:Shape = {
-                    type:"rect",
-                    startX : startX,
-                    startY:startY,
-                    width:width,
-                    height:height
-                }
-                existingShapes.push(newShape)
-                socket.send(JSON.stringify({
+                // @ts-ignore
+                const shape = window.selectedShape
+                if(shape == "rect"){
+                    const newShape:Shape = {
+                        type:"rect",
+                        startX : startX,
+                        startY:startY,
+                        width:width,
+                        height:height
+                    }
+                    existingShapes.push(newShape)
+                    socket.send(JSON.stringify({
                     type:"chat",
                     message:JSON.stringify(newShape),
                     roomId:id
                 }))
+                }else if(shape == "arc"){
+                    let centerX = startX+width/2
+                    let centerY = startY+height/2
+                    let radius = Math.abs(width/2)
+                    const newShape:Shape={
+                        type:"arc",
+                        startX:centerX,
+                        startY:centerY,
+                        radius,
+                        startArc:0,
+                        endArc:Math.PI*2
+                    }
+                    existingShapes.push(newShape)
+                    socket.send(JSON.stringify({
+                    type:"chat",
+                    message:JSON.stringify(newShape),
+                    roomId:id
+                }))
+                }
+               
+                
                 
             })
             canvas.addEventListener('mousemove',(e)=>{
                 if(mouseMove){
-                    const widht = e.clientX - startX
+                    // @ts-ignore
+                    const shape = window.selectedShape
+                    const width = e.clientX - startX
                     const height = e.clientY - startY
-                    ctx.strokeStyle = "rgba(0,0,0)" 
-                    clearCanvas(existingShapes, canvas, ctx);
-                    ctx?.strokeRect(startX, startY, widht, height)
+                    if(shape == "rect"){
+                        ctx.strokeStyle = "rgba(0,0,0)" 
+                        clearCanvas(existingShapes, canvas, ctx);
+                        ctx?.strokeRect(startX, startY, width, height)
+                    }else if (shape == "arc"){
+                        let centerX = startX+width/2
+                        let centerY = startY+height/2
+                        let radius = Math.abs(width/2)
+                        clearCanvas(existingShapes, canvas, ctx);
+                        ctx.beginPath()
+                        ctx?.arc(centerX, centerY, radius, 0, Math.PI*2)
+                        ctx.stroke()
+                    }
+                    
                 
                 }
             })
@@ -85,6 +122,11 @@ function clearCanvas (existingShapes:Shape[], canvas:HTMLCanvasElement, ctx:Canv
     existingShapes.map((shape)=>{
         if(shape.type == "rect"){
             ctx?.strokeRect(shape.startX, shape.startY, shape.width, shape.height)
+        }else if(shape.type == "arc"){
+            ctx.beginPath()
+                        
+            ctx?.arc(shape.startX, shape.startY, shape.radius, shape.startArc, shape.endArc)
+            ctx.stroke()
         }
     })
 }

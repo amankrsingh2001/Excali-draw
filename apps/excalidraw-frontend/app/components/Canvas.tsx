@@ -18,8 +18,14 @@ export default function Canvas({ id }: Rooms) {
   const { socket, loading } = useSocket();
   const {token} = useSelector((state:RootState)=>state.auth)
   const pathname = usePathname(); 
-  const [shape, setShape] = useState("rect")
-    
+  const [shape, setShape] = useState<"arc"|"rect">("rect")
+  useEffect(()=>{
+    console.log(shape)
+    // @ts-ignore
+    window.selectedShape = shape
+
+  },[shape]) 
+
   useEffect(() => {
     if (socket && !loading) {
       socket.send(
@@ -31,6 +37,7 @@ export default function Canvas({ id }: Rooms) {
     }
   }, [socket]);
 
+
   useEffect(() => {
     if (socket == undefined || canvasRef.current == null) {
       return;
@@ -41,7 +48,9 @@ export default function Canvas({ id }: Rooms) {
     let canvas = canvasRef.current;
     // calling canvas
     Draw(canvas, socket, id, token as string);
-  }, [canvasRef, socket, id, loading, shape]);
+
+
+  }, [canvasRef, socket, id, loading]);
 
   if (!socket || socket == undefined) {
     return <div>Loading...</div>;
@@ -68,12 +77,17 @@ export default function Canvas({ id }: Rooms) {
     <div className="w-full h-full overflow-hidden relative">
       <canvas ref={canvasRef} className=""></canvas>
       <div className="absolute h-[6vh] left-[32%] border-[1px] top-4 w-[32vw] bg-white shadow-2xl rounded-lg flex gap-1 items-center">
-        <button className="hover:bg-sky-100  h-[55%]  rounded-md ml-2 px-1">
-          <Square height={24} width={20} color="#666666" />
-        </button>
-        <button onClick={()=>setShape("arc")} className="hover:bg-sky-100  h-[80%] rounded-md px-1">
-          <Circle height={24} width={20} color="#666666" />
-        </button>
+
+          <Square  onClick={()=>
+          setShape("rect")
+        }  height={24} width={20} color="#666666" />
+
+
+          <Circle onClick={()=>
+     
+          setShape('arc')
+        } height={24} width={20} color="#666666" />
+
       </div>
       <button onClick={inviteRoomHandler} className="bg-gradient-to-r from-black to-orange-500 absolute h-[6vh] right-[10%] border-[1px] top-4 w-fit px-4 py-2 text-white shadow-2xl rounded-lg">Invite User</button>
     </div>
