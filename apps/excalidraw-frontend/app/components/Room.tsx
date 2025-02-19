@@ -35,6 +35,7 @@ export default function Room() {
       toast.success("logout")
       router.push('/signin')
     }
+ 
   
 
   return (
@@ -52,7 +53,7 @@ export default function Room() {
             </defs>
             <Brush stroke="url(#gradient)" />
           </svg>
-          
+
           <h1 className="2xl:text-2xl text-lg font-bold bg-gradient-to-r from-[#28282B] to-orange-500 text-transparent bg-clip-text">
             DrawTogether
           </h1>
@@ -75,9 +76,15 @@ export default function Room() {
         
       </div>
         <div className=" flex flex-col w-[90%] mt-8 mx-auto gap-5">
-        <h2 className="text-2xl font-bold text-gray-900">Active Canvases</h2>
-       
+        <h2 className="text-2xl font-bold text-gray-900">Active Canvases </h2>
 
+        {rooms !== null && rooms.length === 0 && 
+           <div className="text-2xl">
+            You dont have any active canvas
+           </div>
+    
+        }
+      
     <div className="flex gap-8 flex-col flex-wrap md:flex-row justify-center items-center lg:item-start lg:justify-start  ">
       {rooms &&
         rooms.map((room: RoomDetails) => {

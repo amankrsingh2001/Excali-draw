@@ -15,6 +15,7 @@ export default function Roomid({slug}:RoomDetails){
             return room.slug === slug            
         })
 
+
         const {id} = activeRoom[0]
 
     return  <Canvas id={id}></Canvas>

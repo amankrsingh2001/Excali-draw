@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Draw } from "../draw/draw";
-import { Circle, Square } from "lucide-react";
+import { Circle, Square, Triangle } from "lucide-react";
 import { useSocket } from "@/hook/useSocket";
 import { RootState } from "../store/store";
 import { Minus } from 'lucide-react';
@@ -19,7 +19,7 @@ export default function Canvas({ id }: Rooms) {
   const { socket, loading } = useSocket();
   const {token} = useSelector((state:RootState)=>state.auth)
   const pathname = usePathname(); 
-  const [shape, setShape] = useState<"arc"|"rect"|"line">("rect")
+  const [shape, setShape] = useState<"arc"|"rect"|"line"|"triangle">("rect")
   const [selected,  setSelected] = useState(false)
 
   useEffect(()=>{
@@ -90,8 +90,9 @@ export default function Canvas({ id }: Rooms) {
           setShape('arc')
         } height={24} width={20} color="#666666" />
 
-        <Minus onClick={()=>
+        <Minus className="rotate-45" onClick={()=>
           setShape('line')
+          
         }/>
       </div>
       <button onClick={inviteRoomHandler} className="bg-gradient-to-r from-black to-orange-500 absolute h-[6vh] right-[10%] border-[1px] top-4 w-fit px-4 py-2 text-white shadow-2xl rounded-lg">Invite User</button>

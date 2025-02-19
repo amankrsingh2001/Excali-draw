@@ -21,7 +21,7 @@ type Shape = {
     endX:number,
     endY:number
     
-}
+} | null
 
 export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string, token:string){
 
@@ -58,29 +58,26 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
 
             canvas.addEventListener('mouseup',(e)=>{
                 mouseMove = false;
+                let newShape:Shape|null = null
                 const width = e.clientX - startX
                 const height = e.clientY - startY
                 // @ts-ignore
                 const shape = window.selectedShape
                 if(shape == "rect"){
-                    const newShape:Shape = {
+                     newShape = {
                         type:"rect",
                         startX : startX,
                         startY:startY,
                         width:width,
                         height:height
                     }
-                    existingShapes.push(newShape)
-                    socket.send(JSON.stringify({
-                    type:"chat",
-                    message:JSON.stringify(newShape),
-                    roomId:id
-                }))
-                }else if(shape == "arc"){
+                   
+                }
+                else if(shape == "arc"){
                     let centerX = startX+width/2
                     let centerY = startY+height/2
                     let radius = Math.abs(width/2)
-                    const newShape:Shape={
+                    newShape={
                         type:"arc",
                         startX:centerX,
                         startY:centerY,
@@ -88,27 +85,23 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
                         startArc:0,
                         endArc:Math.PI*2
                     }
-                    existingShapes.push(newShape)
-                    socket.send(JSON.stringify({
-                    type:"chat",
-                    message:JSON.stringify(newShape),
-                    roomId:id
-                }))
-                }else if(shape == "line"){
-                    const newShape:Shape = {
+                  
+                }
+                else if(shape == "line"){
+                    newShape = {
                         type:"line",
                         startX:startX,
                         startY:startY,
                         endX:e.clientX,
                         endY:e.clientY
-                    }
-                    existingShapes.push(newShape)
-                    socket.send(JSON.stringify({
-                        type:"chat",
-                        message:JSON.stringify(newShape),
-                        roomId:id
-                    }))
+                    }   
                 }
+                existingShapes.push(newShape)
+                socket.send(JSON.stringify({
+                type:"chat",
+                message:JSON.stringify(newShape),
+                roomId:id
+            }))
                
                 
                 
@@ -138,8 +131,6 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
                         ctx?.lineTo(e.clientX, e.clientY)
                         ctx.stroke()
                     }
-                    
-                
                 }
             })
 }
@@ -147,6 +138,7 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
 function clearCanvas (existingShapes:Shape[], canvas:HTMLCanvasElement, ctx:CanvasRenderingContext2D){
     ctx?.clearRect(0,0, canvas.width, canvas.height)
     existingShapes.map((shape)=>{
+        if(shape == null) return;
         if(shape.type == "rect"){
             ctx?.strokeRect(shape.startX, shape.startY, shape.width, shape.height)
         }else if(shape.type == "arc"){
