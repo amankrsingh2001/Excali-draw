@@ -5,6 +5,7 @@ import { Draw } from "../draw/draw";
 import { Circle, Square } from "lucide-react";
 import { useSocket } from "@/hook/useSocket";
 import { RootState } from "../store/store";
+import { Minus } from 'lucide-react';
 import { useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
@@ -18,7 +19,9 @@ export default function Canvas({ id }: Rooms) {
   const { socket, loading } = useSocket();
   const {token} = useSelector((state:RootState)=>state.auth)
   const pathname = usePathname(); 
-  const [shape, setShape] = useState<"arc"|"rect">("rect")
+  const [shape, setShape] = useState<"arc"|"rect"|"line">("rect")
+  const [selected,  setSelected] = useState(false)
+
   useEffect(()=>{
     console.log(shape)
     // @ts-ignore
@@ -76,18 +79,20 @@ export default function Canvas({ id }: Rooms) {
   return (
     <div className="w-full h-full overflow-hidden relative">
       <canvas ref={canvasRef} className=""></canvas>
-      <div className="absolute h-[6vh] left-[32%] border-[1px] top-4 w-[32vw] bg-white shadow-2xl rounded-lg flex gap-1 items-center">
+      <div className="absolute h-[6vh] left-[32%] border-[1px] top-4 w-[32vw] bg-white  shadow-2xl rounded-lg flex gap-1 items-center">
 
           <Square  onClick={()=>
           setShape("rect")
-        }  height={24} width={20} color="#666666" />
+        }className={`ml-4 ${shape=="rect"?"text-red-500 rounded-md":""} `}  height={24} width={20} color="#000" />
 
 
           <Circle onClick={()=>
-     
           setShape('arc')
         } height={24} width={20} color="#666666" />
 
+        <Minus onClick={()=>
+          setShape('line')
+        }/>
       </div>
       <button onClick={inviteRoomHandler} className="bg-gradient-to-r from-black to-orange-500 absolute h-[6vh] right-[10%] border-[1px] top-4 w-fit px-4 py-2 text-white shadow-2xl rounded-lg">Invite User</button>
     </div>

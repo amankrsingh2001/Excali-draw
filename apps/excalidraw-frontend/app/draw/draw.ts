@@ -14,6 +14,13 @@ type Shape = {
         radius:number,
         startArc:number,
         endArc:number
+} | {
+    type:"line",
+    startX:number,
+    startY:number,
+    endX:number,
+    endY:number
+    
 }
 
 export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string, token:string){
@@ -87,6 +94,20 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
                     message:JSON.stringify(newShape),
                     roomId:id
                 }))
+                }else if(shape == "line"){
+                    const newShape:Shape = {
+                        type:"line",
+                        startX:startX,
+                        startY:startY,
+                        endX:e.clientX,
+                        endY:e.clientY
+                    }
+                    existingShapes.push(newShape)
+                    socket.send(JSON.stringify({
+                        type:"chat",
+                        message:JSON.stringify(newShape),
+                        roomId:id
+                    }))
                 }
                
                 
@@ -110,6 +131,12 @@ export async function Draw(canvas:HTMLCanvasElement, socket:WebSocket, id:string
                         ctx.beginPath()
                         ctx?.arc(centerX, centerY, radius, 0, Math.PI*2)
                         ctx.stroke()
+                    }else if (shape == "line"){
+                        clearCanvas(existingShapes, canvas, ctx)
+                        ctx?.beginPath()
+                        ctx.moveTo(startX, startY)
+                        ctx?.lineTo(e.clientX, e.clientY)
+                        ctx.stroke()
                     }
                     
                 
@@ -124,8 +151,12 @@ function clearCanvas (existingShapes:Shape[], canvas:HTMLCanvasElement, ctx:Canv
             ctx?.strokeRect(shape.startX, shape.startY, shape.width, shape.height)
         }else if(shape.type == "arc"){
             ctx.beginPath()
-                        
             ctx?.arc(shape.startX, shape.startY, shape.radius, shape.startArc, shape.endArc)
+            ctx.stroke()
+        }else if (shape.type == "line"){
+            ctx?.beginPath()
+            ctx.moveTo(shape.startX, shape.startY)
+            ctx?.lineTo(shape.endX, shape.endY)
             ctx.stroke()
         }
     })
